@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  // Generate the client into the default @prisma/client location so runtime
+  // imports like `import { PrismaClient } from '@prisma/client'` work.
+  // Removing a custom `output` ensures the client is generated into
+  // node_modules/.prisma/client and `@prisma/client` will be usable.
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PageViewsHourly {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime
+  page        String
+  pageCategory String
+  viewCount   Int
+  referrer    String
+  deviceType  String
+  region      String
+  createdAt   DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([page])
+  @@index([pageCategory])
+  @@map("pageviews_hourly")
+}
+
+model UserActionsHourly {
+  id                Int      @id @default(autoincrement())
+  timestamp         DateTime
+  page              String
+  pageCategory      String
+  avgSessionDuration Float
+  bounceRate        Float
+  conversionRate     Float
+  conversionCount   Int
+  deviceType        String
+  referrer          String
+  region            String
+  createdAt         DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([page])
+  @@index([pageCategory])
+  @@map("useractions_hourly")
+}
+
+model PerformanceHourly {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime
+  page        String
+  pageCategory String
+  avgLoadTime Float
+  errorRate   Float
+  deviceType  String
+  region      String
+  createdAt   DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([page])
+  @@index([pageCategory])
+  @@map("performance_hourly")
+}
+
+model BusinessInsight {
+  id             Int      @id @default(autoincrement())
+  metricType     String
+  page           String
+  insightText    String   @db.Text
+  suggestedAction String  @db.Text
+  impactScore    Float
+  timestamp      DateTime
+  createdAt      DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([page])
+  @@index([metricType])
+  @@map("business_insights")
+}
+
